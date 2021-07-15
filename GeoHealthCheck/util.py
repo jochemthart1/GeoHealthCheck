@@ -265,7 +265,7 @@ def decode(key: str, string: str) -> str:
 # Provides a requests Session object with requests' Retry capabilities.
 # TODO: may make numbers below configurable
 def create_requests_retry_session(
-    retries=3,
+    retries=5,
     backoff_factor=0.3,
     status_forcelist=(500, 502, 504),
     session=None,
