@@ -91,7 +91,7 @@ class Probe(Plugin):
     def __init__(self):
         Plugin.__init__(self)
         self._resource = None
-        self._session = create_requests_retry_session()
+        self._session = create_requests_retry_session(retries=5)
 
     #
     # Lifecycle : optionally expand params from Resource metadata
