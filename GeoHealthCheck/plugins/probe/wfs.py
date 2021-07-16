@@ -127,9 +127,16 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         :param version:
         :return: Metadata object
         """
-        return WebFeatureService(resource.url,
-                                 version=version,
-                                 headers=self.get_request_headers())
+        for i in range(5):
+            try:
+                wfs = WebFeatureService(resource.url,
+                                    version=version,
+                                    headers=self.get_request_headers())
+                break
+            except:
+                continue
+
+        return wfs
 
     # Overridden: expand param-ranges from WFS metadata
     def expand_params(self, resource):
@@ -240,12 +247,9 @@ class WfsGetFeatureBboxAll(WfsGetFeatureBbox):
         """ Before request to service, overridden from base class"""
 
         # Get capabilities doc to get all layers
-        try:
-            self.wfs = self.get_metadata_cached(self._resource,
-                                                version='1.1.0')
-            self.feature_types = self.wfs.contents.keys()
-        except Exception as err:
-            self.result.set(False, str(err))
+        self.wfs = self.get_metadata_cached(self._resource,
+                                            version='1.1.0')
+        self.feature_types = self.wfs.contents.keys()
 
     def perform_request(self):
         """ Perform actual request to service, overridden from base class"""

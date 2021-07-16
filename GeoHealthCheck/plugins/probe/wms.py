@@ -109,8 +109,16 @@ class WmsGetMapV1(Probe):
         :param version:
         :return: Metadata object
         """
-        return WebMapService(resource.url, version=version,
-                             headers=self.get_request_headers())
+        for i in range(5):
+            try:
+                wms = WebMapService(resource.url,
+                                    version=version,
+                                    headers=self.get_request_headers())
+                break
+            except:
+                continue
+
+        return wms
 
     # Overridden: expand param-ranges from WMS metadata
     def expand_params(self, resource):
@@ -190,12 +198,9 @@ class WmsGetMapV1All(WmsGetMapV1):
         """ Before request to service, overridden from base class"""
 
         # Get capabilities doc to get all layers
-        try:
-            self.wms = self.get_metadata_cached(self._resource,
-                                                version='1.1.1')
-            self.layers = self.wms.contents.keys()
-        except Exception as err:
-            self.result.set(False, str(err))
+        self.wms = self.get_metadata_cached(self._resource,
+                                            version='1.1.1')
+        self.layers = self.wms.contents.keys()
 
     def perform_request(self):
         """ Perform actual request to service, overridden from base class"""
