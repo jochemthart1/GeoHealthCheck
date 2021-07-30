@@ -103,15 +103,25 @@ class TmsGetTile(Probe):
         Probe.__init__(self)
         self.layer_count = 0
 
-    def get_metadata(self, resource, version='1.0.0'):
+    def get_metadata(self, resource, version='1.0.0', retries=3):
         """
         Get metadata, specific per Resource type.
         :param resource:
         :param version:
         :return: Metadata object
         """
-        return TileMapService(resource.url, version=version,
-                              headers=self.get_request_headers())
+        request_headers = self.get_request_headers()
+        for i in range(retries):
+            try:
+                tms = TileMapService(resource.url,
+                                    version=version,
+                                    headers=request_headers)
+            except Exception as e:
+                if i >= retries - 1:
+                    raise e
+                continue
+        
+        return tms
 
     # Overridden: expand param-ranges from WMS metadata
     def expand_params(self, resource):

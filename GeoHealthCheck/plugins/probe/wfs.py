@@ -120,22 +120,24 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         Probe.__init__(self)
         self.layer_count = 0
 
-    def get_metadata(self, resource, version='1.1.0'):
+    def get_metadata(self, resource, version='1.1.0', retries=3):
         """
         Get metadata, specific per Resource type.
         :param resource:
         :param version:
         :return: Metadata object
         """
-        for i in range(5):
+        request_headers = self.get_request_headers()
+        for i in range(retries):
             try:
                 wfs = WebFeatureService(resource.url,
                                     version=version,
-                                    headers=self.get_request_headers())
-                break
-            except:
+                                    headers=request_headers)
+            except Exception as e:
+                if i >= retries - 1:
+                    raise e
                 continue
-
+        
         return wfs
 
     # Overridden: expand param-ranges from WFS metadata
