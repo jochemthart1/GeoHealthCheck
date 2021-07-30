@@ -119,7 +119,6 @@ class WmsGetMapV1(Probe):
                 if i >= retries - 1:
                     raise e
                 continue
-        
         return wms
 
     # Overridden: expand param-ranges from WMS metadata

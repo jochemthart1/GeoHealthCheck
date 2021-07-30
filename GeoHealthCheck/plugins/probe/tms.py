@@ -114,13 +114,12 @@ class TmsGetTile(Probe):
         for i in range(retries):
             try:
                 tms = TileMapService(resource.url,
-                                    version=version,
-                                    headers=request_headers)
+                                     version=version,
+                                     headers=request_headers)
             except Exception as e:
                 if i >= retries - 1:
                     raise e
                 continue
-        
         return tms
 
     # Overridden: expand param-ranges from WMS metadata

@@ -131,13 +131,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         for i in range(retries):
             try:
                 wfs = WebFeatureService(resource.url,
-                                    version=version,
-                                    headers=request_headers)
+                                        version=version,
+                                        headers=request_headers)
             except Exception as e:
                 if i >= retries - 1:
                     raise e
                 continue
-        
         return wfs
 
     # Overridden: expand param-ranges from WFS metadata
