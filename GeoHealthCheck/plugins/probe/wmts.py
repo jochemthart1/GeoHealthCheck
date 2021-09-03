@@ -215,15 +215,6 @@ class WmtsGetTileLayers(WmtsGetTileAll):
     DESCRIPTION = """
     Do WMTS GetTile request on user-specified layers.
     """
-    RESOURCE_TYPE = 'OGC:WMTS'
-
-    REQUEST_METHOD = 'GET'
-    REQUEST_TEMPLATE = '?SERVICE=WMTS&VERSION=1.0.0&' + \
-                       'REQUEST=GetTile&LAYER={layers}&' + \
-                       'TILEMATRIXSET={tilematrixset}&' + \
-                       'TILEMATRIX={tilematrix}&TILEROW={tilerow}&' + \
-                       'TILECOL={tilecol}&FORMAT={format}&' + \
-                       'EXCEPTIONS={exceptions}&STYLE={style}'
 
     PARAM_DEFS = {
         'layers': {
