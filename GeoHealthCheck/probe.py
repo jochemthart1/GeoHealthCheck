@@ -10,6 +10,7 @@ from plugin import Plugin
 from result import ProbeResult
 from util import create_requests_retry_session
 from GeoHealthCheck import __version__
+import copy
 
 LOGGER = logging.getLogger(__name__)
 
@@ -266,7 +267,7 @@ class Probe(Plugin):
                 self.REQUEST_TEMPLATE = '&' + self.REQUEST_TEMPLATE[1:]
 
             if self._parameters:
-                request_parms = self._parameters
+                request_parms = copy.deepcopy(self._parameters)
                 param_defs = self.get_param_defs()
 
                 # Expand string list array to comma separated string
