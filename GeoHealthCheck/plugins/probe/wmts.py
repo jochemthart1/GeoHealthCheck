@@ -144,7 +144,6 @@ class WmtsGetTileAll(Probe):
         results_failed_total = []
 
         for layer in self.layers:
-            print(layer)
             self._parameters['layers'] = [layer]
 
             bbox84 = self.wmts.contents[layer].boundingBoxWGS84
