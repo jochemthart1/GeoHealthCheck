@@ -1,10 +1,6 @@
 from GeoHealthCheck.probe import Probe
 from owslib.wmts import WebMapTileService
-import math
 from pyproj import Proj, transform
-
-
-
 
 
 class WmtsGetTileAll(Probe):
