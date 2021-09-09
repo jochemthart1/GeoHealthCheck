@@ -146,6 +146,8 @@ class WmtsGetTileAll(Probe):
         for layer in self.layers:
             self._parameters['layers'] = [layer]
 
+            # Get the boundingbox from capabilities to get
+            # the center coordinate
             bbox84 = self.wmts.contents[layer].boundingBoxWGS84
             center_coord_84 = [(bbox84[0] + bbox84[2]) / 2,
                                (bbox84[1] + bbox84[3]) / 2]
@@ -154,6 +156,8 @@ class WmtsGetTileAll(Probe):
             for set in tilematrixsets:
                 self._parameters['tilematrixset'] = set
 
+                # Get projection from capabilities and transform
+                # the center coordinate
                 set_crs = tilematrixsets[set].crs
                 center_coord = transform(Proj('EPSG:4326'),
                                          Proj(set_crs),
@@ -192,9 +196,12 @@ class WmtsGetTileAll(Probe):
     def calculate_center_tile(self, center_coord, tilematrix):
         scale = tilematrix.scaledenominator
         topleftcorner = tilematrix.topleftcorner
+
+        # Calculate tile size
         tilewidth = 0.00028 * scale * tilematrix.tilewidth
         tileheight = 0.00028 * scale * tilematrix.tileheight
 
+        # Calculate tile index of center tile in the right projection
         tilecol = int((center_coord[0] - topleftcorner[0]) / tilewidth)
         tilerow = int((topleftcorner[1] - center_coord[1]) / tileheight)
 
