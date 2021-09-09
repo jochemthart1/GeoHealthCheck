@@ -97,7 +97,7 @@ class WmtsGetTileAll(Probe):
         :return: Metadata object
         """
         return WebMapTileService(resource.url, version=version,
-                             headers=self.get_request_headers())
+                                 headers=self.get_request_headers())
 
     # Overridden: expand param-ranges from WMTS metadata
     def expand_params(self, resource):
@@ -125,7 +125,7 @@ class WmtsGetTileAll(Probe):
         # Get capabilities doc to get all layers
         try:
             self.wmts = self.get_metadata_cached(self._resource,
-                                                version='1.0.0')
+                                                 version='1.0.0')
 
             self.layers = self.wmts.contents
 
@@ -147,20 +147,26 @@ class WmtsGetTileAll(Probe):
             self._parameters['layers'] = [layer]
 
             bbox84 = self.wmts.contents[layer].boundingBoxWGS84
-            centercoord84 = [(bbox84[0] + bbox84[2]) / 2, (bbox84[1] + bbox84[3]) / 2]
+            center_coord_84 = [(bbox84[0] + bbox84[2]) / 2,
+                               (bbox84[1] + bbox84[3]) / 2]
 
             tilematrixsets = self.wmts.tilematrixsets
             for set in tilematrixsets:
                 self._parameters['tilematrixset'] = set
 
                 set_crs = tilematrixsets[set].crs
-                centercoord = transform(Proj('EPSG:4326'), Proj(set_crs), centercoord84[1], centercoord84[0])
+                center_coord = transform(Proj('EPSG:4326'),
+                                         Proj(set_crs),
+                                         center_coord_84[1],
+                                         center_coord_84[0])
 
                 tilematrices = tilematrixsets[set].tilematrix
                 for zoom in tilematrices:
                     self._parameters['tilematrix'] = zoom
 
-                    tilecol, tilerow = self.calculate_center_tile(centercoord, tilematrices[zoom])
+                    tilecol, tilerow = self.calculate_center_tile(
+                        center_coord,
+                        tilematrices[zoom])
                     self._parameters['tilecol'] = tilecol
                     self._parameters['tilerow'] = tilerow
 
@@ -183,13 +189,14 @@ class WmtsGetTileAll(Probe):
 
         self.result.results_failed = results_failed_total
 
-    def calculate_center_tile(self, centercoord, tilematrix):
+    def calculate_center_tile(self, center_coord, tilematrix):
         scale = tilematrix.scaledenominator
         topleftcorner = tilematrix.topleftcorner
-        tilewidth, tileheight = tilematrix.tilewidth, tilematrix.tileheight
-        
-        tilecol = int((centercoord[0] - topleftcorner[0]) / (0.00028 * scale * tilewidth))
-        tilerow = int((topleftcorner[1] - centercoord[1]) / (0.00028 * scale * tileheight))
+        tilewidth = 0.00028 * scale * tilematrix.tilewidth
+        tileheight = 0.00028 * scale * tilematrix.tileheight
+
+        tilecol = int((center_coord[0] - topleftcorner[0]) / tilewidth)
+        tilerow = int((topleftcorner[1] - center_coord[1]) / tileheight)
 
         return tilecol, tilerow
 
@@ -203,7 +210,8 @@ class WmtsGetTileAllRest(WmtsGetTileAll):
     DESCRIPTION = """
     Get WMTS GetTile for all layers REST.
     """
-    REQUEST_TEMPLATE = '/wmts/{layers}/{tilematrixset}/{tilematrix}/{tilerow}/{tilecol}.png'
+    REQUEST_TEMPLATE = '/wmts/{layers}/{tilematrixset}/{tilematrix}' + \
+                       '/{tilerow}/{tilecol}.png'
 
 
 class WmtsGetTileLayers(WmtsGetTileAll):
@@ -289,7 +297,7 @@ class WmtsGetTileLayers(WmtsGetTileAll):
         # Get capabilities doc to get all layers
         try:
             self.wmts = self.get_metadata_cached(self._resource,
-                                                version='1.0.0')
+                                                 version='1.0.0')
 
             self.layers = self._parameters['layers']
 
@@ -306,4 +314,5 @@ class WmtsGetTileLayersRest(WmtsGetTileLayers):
     DESCRIPTION = """
     Get WMTS GetTile for specific layers REST.
     """
-    REQUEST_TEMPLATE = '/wmts/{layers}/{tilematrixset}/{tilematrix}/{tilerow}/{tilecol}.png'
+    REQUEST_TEMPLATE = '/wmts/{layers}/{tilematrixset}/{tilematrix}' + \
+                       '/{tilerow}/{tilecol}.png'
