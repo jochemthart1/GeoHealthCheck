@@ -4,11 +4,11 @@ import requests
 
 class Ogc3DTileset(Probe):
     """
-    ...
+    OGC3D
     """
 
-    NAME = '...'
-    DESCRIPTION = '...'
+    NAME = 'OGC3D'
+    DESCRIPTION = 'OGC3D'
     RESOURCE_TYPE = 'OGC:3D'
     REQUEST_METHOD = 'GET'
 
