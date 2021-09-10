@@ -111,6 +111,8 @@ GHC_PLUGINS = [
     'GeoHealthCheck.plugins.probe.wfs3',
     'GeoHealthCheck.plugins.probe.esrifs',
     'GeoHealthCheck.plugins.probe.ghcreport',
+    'GeoHealthCheck.plugins.probe.ogc3d',
+    'GeoHealthCheck.plugins.probe.mbtiles',
 
     # Checkers
     'GeoHealthCheck.plugins.check.checks',
@@ -175,6 +177,12 @@ GHC_PROBE_DEFAULTS = {
     'GHC:Report': {
         'probe_class':
             'GeoHealthCheck.plugins.probe.ghcreport.GHCEmailReporter'
+    },
+    'OGC:3D': {
+        'probe_class': 'GeoHealthCheck.plugins.probe.ogc3d.B3DMTileset'
+    },
+    'MBTiles': {
+        'probe_class': 'GeoHealthCheck.plugins.probe.mbtiles.MBTiles'
     }
 }
 

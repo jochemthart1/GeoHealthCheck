@@ -101,7 +101,7 @@ class WmtsGetTileAll(Probe):
 
     # Overridden: expand param-ranges from WMTS metadata
     def expand_params(self, resource):
-
+        
         # Use WMTS Capabilities doc to get metadata for
         # PARAM_DEFS ranges/defaults
         try:
@@ -218,7 +218,7 @@ class WmtsGetTileAllRest(WmtsGetTileAll):
     Get WMTS GetTile for all layers REST.
     """
     REQUEST_TEMPLATE = '/wmts/{layers}/{tilematrixset}/{tilematrix}' + \
-                       '/{tilerow}/{tilecol}.png'
+                       '/{tilecol}/{tilerow}.png'
 
 
 class WmtsGetTileLayers(WmtsGetTileAll):
@@ -322,4 +322,4 @@ class WmtsGetTileLayersRest(WmtsGetTileLayers):
     Get WMTS GetTile for specific layers REST.
     """
     REQUEST_TEMPLATE = '/wmts/{layers}/{tilematrixset}/{tilematrix}' + \
-                       '/{tilerow}/{tilecol}.png'
+                       '/{tilecol}/{tilerow}.png'

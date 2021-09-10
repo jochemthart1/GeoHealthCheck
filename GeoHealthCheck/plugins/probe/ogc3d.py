@@ -2,7 +2,7 @@ from GeoHealthCheck.probe import Probe
 import requests
 
 
-class Ogc3DTileset(Probe):
+class B3DMTileset(Probe):
     """
     OGC3D
     """
@@ -21,23 +21,25 @@ class Ogc3DTileset(Probe):
 
     def perform_request(self):
         url_base = self._resource.url
+
+        # Remove trailing '/' if present
         if url_base[-1] == '/':
             url_base = url_base[0:-2]
-            print(url_base)
 
         try:
             tile_url = url_base + '/tileset.json'
             self.log('Requesting: %s url=%s' % (self.REQUEST_METHOD, tile_url))
-            self.response = Probe.perform_get_request(tile_url)
+            self.response = Probe.perform_get_request(self, tile_url)
             self.check_response()
         except requests.exceptions.RequestException as e:
             msg = "Request Err: %s %s" % (e.__class__.__name__, str(e))
             self.result.set(False, msg)
 
         try:
-            data_url = self.get_3d_tileset_content_uri(self.response)
+            data_uri = self.get_3d_tileset_content_uri(self.response.json())
+            data_url = url_base + '/' + data_uri
             self.log('Requesting: %s url=%s' % (self.REQUEST_METHOD, data_url))
-            self.response = Probe.perform_get_request(data_url)
+            self.response = Probe.perform_get_request(self, data_url)
             self.check_response()
         except requests.exceptions.RequestException as e:
             msg = "Request Err: %s %s" % (e.__class__.__name__, str(e))
@@ -46,7 +48,6 @@ class Ogc3DTileset(Probe):
     def check_response(self):
         if self.response:
             self.log('response: status=%d' % self.response.status_code)
-
             if self.response.status_code / 100 in [4, 5]:
                 self.log('Error response: %s' % (str(self.response.text)))
 

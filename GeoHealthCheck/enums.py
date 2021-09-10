@@ -91,5 +91,11 @@ RESOURCE_TYPES = {
     },
     'GHC:Report': {
         'label': 'GeoHealthCheck Reporter (GHC-R)'
+    },
+    'OGC:3D': {
+        'label': '3D Vector Tiles'
+    },
+    'MBTiles': {
+        'label': 'MBTiles'
     }
 }
