@@ -32,6 +32,7 @@ class B3DMTileset(Probe):
             self.response = Probe.perform_get_request(self, tile_url)
             self.check_response()
         except requests.exceptions.RequestException as e:
+            #msg clear voor welk request
             msg = "Request Err: %s %s" % (e.__class__.__name__, str(e))
             self.result.set(False, msg)
 

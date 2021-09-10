@@ -49,7 +49,7 @@ class MBTiles(Probe):
         wm_coords = self.to_wm(lat, lon)
 
         # Circumference (2 * pi * Semi-major Axis)
-        circ = 2 * math.pi * 6378137.0  
+        circ = 2 * math.pi * 6378137.0
 
         # For calculate the relative tile index for zoom levels
         x_rel = (circ / 2 + wm_coords[0]) / circ
